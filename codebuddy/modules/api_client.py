@@ -2,6 +2,8 @@
 import requests
 import urllib.parse
 
+from .config import API as API_CONFIG
+
 
 class APIClient:
 
@@ -24,7 +26,7 @@ class APIClient:
         """
 
         # Construct the full URL for the chat completions endpoint
-        self.url = urllib.parse.urljoin(url, "v1/chat/completions")
+        self.url = urllib.parse.urljoin(url, API_CONFIG.get("endpoint"))
 
         # Set the default headers for HTTP requests
         self.headers = {"Content-Type": "application/json"}
@@ -42,8 +44,8 @@ class APIClient:
 
         data = {
             "messages": prompt,
-            "max_tokens": 500,
-            "temperature": 0.5
+            "max_tokens": API_CONFIG.get("max_tokens"),
+            "temperature": API_CONFIG.get("temperature")
         }
 
         # Send a POST request to the API endpoint with the specified headers and data

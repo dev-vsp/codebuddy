@@ -1,4 +1,10 @@
 
+API = {
+    "endpoint": "v1/chat/completions",
+    "max_tokens": 500,
+    "temperature": 0.5
+}
+
 # Prompts for interacting with AI
 SYSTEM_PROMPT = """
 You're an expert in code analysis.
