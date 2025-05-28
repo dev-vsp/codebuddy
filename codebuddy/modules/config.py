@@ -5,6 +5,9 @@ API = {
     "temperature": 0.5
 }
 
+# The name of the directory to be created in the repository directory for storing reports
+REPORT_DIR_NAME = "reports"
+
 # Prompts for interacting with AI
 SYSTEM_PROMPT = """
 You're an expert in code analysis.

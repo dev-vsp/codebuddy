@@ -2,26 +2,28 @@
 import pathlib
 import datetime
 
+from .config import REPORT_DIR_NAME
+
 
 class ReportGenerator:
 
     """
     A class to generate and save reports in Markdown format.
 
-    This class manages the creation of report files in a specified directory,
-    allowing you to add entries to the report and save it with a timestamped filename.
+    This class manages the creation of report files in the repository directory,
+    allowing you to add records to a report and save it with a time stamped name.
     """
 
-    def __init__(self, reports_dir: str = "reports") -> None:
+    def __init__(self, repository_dir: pathlib.Path) -> None:
         """
-        Initializes the ReportGenerator with a specified directory for storing reports.
-        
+        Initializes the ReportGenerator for storing reports.
+
         Args:
-            reports_dir (str): The directory where reports will be saved. Defaults to "reports".
+            repository_dir (Path): Repository directory path, used for storing reports.
         """
 
-        # Convert the reports directory string to a Path object and resolve its absolute path
-        self.reports_dir = pathlib.Path(reports_dir).resolve()
+        # Convert the full path to the directory with reports
+        self.reports_dir = (repository_dir / REPORT_DIR_NAME).resolve()
 
         # Check if the reports directory exists, and create it if it doesn't
         if not self.reports_dir.exists():
@@ -32,7 +34,7 @@ class ReportGenerator:
         # Format the current date and time as a string in the format YYYY-MM-DD_HH:MM:SS
         formatted_datetime = current_datetime.strftime("%Y-%m-%d_%H:%M:%S")
         # Create the full path for the report file using the formatted date and time
-        self.report_file_path = self.reports_dir / (formatted_datetime + ".md")
+        self.report_file_path = self.reports_dir / f"{formatted_datetime}.md"
 
         # Initialize an empty list to store report entries
         self.report_data = []
@@ -51,7 +53,7 @@ class ReportGenerator:
 
         # Create a formatted report entry string with a header
         # for the file path and the report entry data
-        report_entry = f"# File: {file_path}\n{report_entry_data}"
+        report_entry = f"## File: {file_path}\n{report_entry_data}"
 
         # Append the report entry to the list of report data
         self.report_data.append(
