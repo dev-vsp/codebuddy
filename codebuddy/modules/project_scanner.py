@@ -3,7 +3,7 @@ import pathlib
 import pathspec
 from typing import Dict, List
 
-from .config import extentions, FILTER_FILES
+from .config import extentions, FILTER_FILES, FILTER_DIRS
 
 
 class ProjectScanner:
@@ -101,6 +101,10 @@ class ProjectScanner:
 
             # Skip files that are in the FILTER_FILES list
             if path.name in FILTER_FILES:
+                continue
+
+            # Skip directories that are in the FILTER_DIRS list
+            if any(rel_path.as_posix().startswith(dir) for dir in FILTER_DIRS):
                 continue
 
             # Process only files (not directories)

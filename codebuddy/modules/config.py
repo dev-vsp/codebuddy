@@ -55,6 +55,11 @@ FILTER_FILES = [
     "__init__.py"
 ]
 
+# List of directories that will not be analyzed
+FILTER_DIRS = [
+    REPORT_DIR_NAME
+]
+
 extentions = {
     "code": CODE_EXTENSIONS,
     "docs": DOCS_EXTENSIONS
