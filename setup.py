@@ -18,7 +18,9 @@ setup(
     packages=find_packages(),
     python_requires='>=3.12.3',
     install_requires=[
-        "click==8.1.3"
+        "click==8.2.1",
+        "requests==2.32.3",
+        "urllib3==2.4.0"
     ],
     entry_points={
         'console_scripts': [
