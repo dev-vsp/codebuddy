@@ -8,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as readme_file:
 
 setup(
     name="codebuddy",
-    version="0.1",
+    version="0.1.0",
     author="Vadim Sergeev",
     author_email="dev-vsp@outlook.com",
     description="Script for git repository analysis and reporting",
@@ -16,7 +16,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/dev-vsp/CodeBuddy",
     packages=find_packages(),
-    python_requires='>=3.12.3',
+    python_requires='>=3.8',
     install_requires=[
         "click==8.2.1",
         "requests==2.32.3",

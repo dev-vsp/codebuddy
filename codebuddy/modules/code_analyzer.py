@@ -12,7 +12,7 @@ class CodeAnalyzer:
         prompts (dict): A dictionary containing prompts for different types of analysis.
     """
 
-    def __init__(self, api_client: APIClient, prompts: str) -> None:
+    def __init__(self, api_client: APIClient, prompts: dict) -> None:
         """
         Initializes the CodeAnalyzer with an API client and a set of prompts.
 

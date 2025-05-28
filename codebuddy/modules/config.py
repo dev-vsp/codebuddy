@@ -1,4 +1,5 @@
 
+# Prompts for interacting with AI
 SYSTEM_PROMPT = """
 You're an expert in code analysis.
 Your task is to use all your knowledge about professional programming standards to generate high-quality reports.
@@ -24,4 +25,28 @@ prompts = {
     "sys": SYSTEM_PROMPT,
     "code": CODE_REVIEW_PROMPT,
     "docs": DOCS_REVIEW_PROMPT
+}
+
+
+# Settings of the algorithm for reading the project structure
+CODE_EXTENSIONS = {
+    ".py", ".js", ".ts", ".java", ".c", ".cpp", ".h", ".hpp",
+    ".cs", ".go", ".rb", ".php", ".swift", ".kt", ".rs", ".m", ".mm"
+}
+
+DOCS_EXTENSIONS = {
+    ".md", ".markdown", ".txt", ".rst", ".pdf", ".docx", ".xlsx",
+    ".xls", ".pptx", ".odt", ".rtf", ".log"
+}
+
+# List of files that will not be analyzed
+FILTER_FILES = [
+    "LICENSE",
+    "requirements.txt",
+    "__init__.py"
+]
+
+extentions = {
+    "code": CODE_EXTENSIONS,
+    "docs": DOCS_EXTENSIONS
 }
