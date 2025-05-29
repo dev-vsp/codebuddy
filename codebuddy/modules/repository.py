@@ -3,21 +3,21 @@ import pathlib
 import pathspec
 from typing import Dict, List
 
-from .config import extentions, FILTER_FILES, FILTER_DIRS
+from .config import EXTENTIONS, FILTER_FILES, FILTER_DIRS
 
 
-class ProjectScanner:
+class RepositoryTools:
 
     """
-    A class to scan a project directory and categorize its files based on their types.
+    A class for managing and analyzing files in a Git repository.
     """
 
     def __init__(self, repository_dir: str) -> None:
         """
-        Initializes the ProjectScanner with the given repository directory.
+        Initializes the RepositoryTools with the given repository directory.
 
         Args:
-            repository_dir (str): The path to the repository directory to be scanned.
+            repository_dir (str): The path to the repository directory.
         """
 
         # Resolve the repository directory to an absolute path
@@ -74,7 +74,7 @@ class ProjectScanner:
     def categorize_files(self) -> Dict[str, List[pathlib.Path]]:
         """
         Categorizes files in the repository into 'code' and 'docs' categories based on their extensions,
-        while respecting the .gitignore file and a list of filtered files.
+        while respecting the .gitignore file and a list of filtered files and directories.
 
         Returns:
             Dict[str, List[pathlib.Path]]: A dictionary with two keys: 'code' and 'docs',
@@ -113,9 +113,9 @@ class ProjectScanner:
                 ext = path.suffix.lower()
 
                 # Categorize the file based on its extension
-                if ext in extentions.get("code"):
+                if ext in EXTENTIONS.get("code"):
                     result["code"].append(path)
-                elif ext in extentions.get("docs"):
+                elif ext in EXTENTIONS.get("docs"):
                     result["docs"].append(path)
 
         return result

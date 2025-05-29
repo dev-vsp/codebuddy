@@ -20,7 +20,8 @@ setup(
     install_requires=[
         "click==8.2.1",
         "requests==2.32.3",
-        "urllib3==2.4.0"
+        "urllib3==2.4.0",
+        "pathspec==0.12.1"
     ],
     entry_points={
         'console_scripts': [

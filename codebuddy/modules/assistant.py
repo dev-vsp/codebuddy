@@ -1,28 +1,28 @@
 
-from .api_client import APIClient
+from .api import LMAPI
+from .config import PROMPTS
 
 
-class CodeAnalyzer:
+class Assistant:
 
     """
-    A class for analyzing code and documentation using an API client.
-
-    Attributes:
-        api_client (APIClient): An instance of the API client used to interact with the API.
-        prompts (dict): A dictionary containing prompts for different types of analysis.
+    An AI assistant that interacts with a LM API to provide various types of reviews and responses.
     """
 
-    def __init__(self, api_client: APIClient, prompts: dict) -> None:
+    def __init__(self, api_url: str = None) -> None:
         """
-        Initializes the CodeAnalyzer with an API client and a set of prompts.
+        Initializes the Assistant with an optional API URL.
 
         Args:
-            api_client (APIClient): The API client used to send requests and receive responses.
-            prompts (dict): A dictionary containing system and user prompts for code and documentation review.
+            api_url (str, optional): The URL of the LM API. If not provided, a default URL is used.
         """
 
-        self.api_client = api_client
-        self.prompts = prompts
+        if api_url:
+            self.lm_api = LMAPI(api_url)
+        else:
+            self.lm_api = LMAPI()
+
+        self.prompts = PROMPTS
 
     def get_response(self, prompt: list) -> str:
         """
@@ -35,7 +35,7 @@ class CodeAnalyzer:
             str: The response received from the API.
         """
 
-        response = self.api_client.get_response(prompt)
+        response = self.lm_api.get_response(prompt)
         return response
 
     def code_review(self, code: str) -> str:

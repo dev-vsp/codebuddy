@@ -1,5 +1,6 @@
 
 API = {
+    "url": "http://localhost:1234",
     "endpoint": "v1/chat/completions",
     "max_tokens": 500,
     "temperature": 0.5
@@ -30,12 +31,11 @@ Do not write examples, try to fit within 400 tokens.
 {doc_text}
 """
 
-prompts = {
+PROMPTS = {
     "sys": SYSTEM_PROMPT,
     "code": CODE_REVIEW_PROMPT,
     "docs": DOCS_REVIEW_PROMPT
 }
-
 
 # Settings of the algorithm for reading the project structure
 CODE_EXTENSIONS = {
@@ -46,6 +46,11 @@ CODE_EXTENSIONS = {
 DOCS_EXTENSIONS = {
     ".md", ".markdown", ".txt", ".rst", ".pdf", ".docx", ".xlsx",
     ".xls", ".pptx", ".odt", ".rtf", ".log"
+}
+
+EXTENTIONS = {
+    "code": CODE_EXTENSIONS,
+    "docs": DOCS_EXTENSIONS
 }
 
 # List of files that will not be analyzed
@@ -59,8 +64,3 @@ FILTER_FILES = [
 FILTER_DIRS = [
     REPORT_DIR_NAME
 ]
-
-extentions = {
-    "code": CODE_EXTENSIONS,
-    "docs": DOCS_EXTENSIONS
-}

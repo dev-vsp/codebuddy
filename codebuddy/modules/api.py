@@ -5,27 +5,26 @@ import urllib.parse
 from .config import API as API_CONFIG
 
 
-class APIClient:
+class LMAPI:
 
     """
-    A class for interacting with the chat API.
+    A class for interacting with the LM API.
 
-    This class provides methods for sending requests to the chat API and receiving responses.
-    It automatically generates the necessary headers and request parameters.
+    This class provides methods for sending requests to the LM API and receiving responses.
 
     Attributes:
-        url (str): The full URL of the chat API endpoint.
+        url (str): The base URL of the LM API.
     """
 
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str = API_CONFIG.get("url")) -> None:
         """
-        Initialize the APIClient with the base URL of the API.
+        Initialize the LMAPI with the base URL of the API.
 
         Args:
-            url (str): The base URL of the API endpoint.
+            url (str): The base URL of the API.
         """
 
-        # Construct the full URL for the chat completions endpoint
+        # Construct the full URL
         self.url = urllib.parse.urljoin(url, API_CONFIG.get("endpoint"))
 
         # Set the default headers for HTTP requests
