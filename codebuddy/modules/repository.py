@@ -1,4 +1,5 @@
 
+import git
 import pathlib
 import pathspec
 from typing import Dict, List
@@ -12,16 +13,16 @@ class RepositoryTools:
     A class for managing and analyzing files in a Git repository.
     """
 
-    def __init__(self, repository_dir: str) -> None:
+    def __init__(self, repository_dir: pathlib.Path) -> None:
         """
         Initializes the RepositoryTools with the given repository directory.
 
         Args:
-            repository_dir (str): The path to the repository directory.
+            repository_dir (Path): The path to the repository directory.
         """
 
         # Resolve the repository directory to an absolute path
-        self.repository_dir = pathlib.Path(repository_dir).resolve()
+        self.repository_dir = repository_dir.resolve()
 
         # Categorize the files in the repository
         self.project_structure = self.categorize_files()
@@ -119,3 +120,19 @@ class RepositoryTools:
                     result["docs"].append(path)
 
         return result
+
+    @staticmethod
+    def clone_from(repo_url: str, local_dir: pathlib.Path) -> git.Repo:
+        """
+        Clones a Git repository from the specified URL into a local directory
+
+        Args:
+            repo_url (str): The URL of the Git repository to clone.
+            local_dir (pathlib.Path): The local directory path where the repository should be cloned.
+
+        Returns:
+            git.Repo: A git.Repo object representing the cloned repository.
+        """
+
+        repo = git.Repo.clone_from(repo_url, f"{local_dir.resolve().as_posix()}")
+        return repo
