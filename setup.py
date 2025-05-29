@@ -16,16 +16,19 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/dev-vsp/CodeBuddy",
     packages=find_packages(),
-    python_requires='>=3.8',
+    python_requires='>=3.12',
     install_requires=[
         "click==8.2.1",
         "requests==2.32.3",
         "urllib3==2.4.0",
-        "pathspec==0.12.1"
+        "pathspec==0.12.1",
+        "GitPython==3.1.44",
+        "markdown==3.8",
+        "beautifulsoup4==4.13.4",
     ],
     entry_points={
         'console_scripts': [
-            "codebuddy=codebuddy.main:review"
+            "codebuddy=codebuddy.__main__:app"
         ]
     }
 )

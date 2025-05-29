@@ -1,4 +1,6 @@
 
+import bs4
+import markdown
 import pathlib
 import datetime
 
@@ -8,7 +10,7 @@ from .config import REPORT_DIR_NAME
 class ReportGenerator:
 
     """
-    A class to generate and save reports in Markdown format.
+    A class to generate, edit and save reports.
 
     This class manages the creation of report files in the repository directory,
     allowing you to add records to a report and save it with a time stamped name.
@@ -74,7 +76,34 @@ class ReportGenerator:
         report_data = "\n\n".join(self.report_data)
 
         # Open the report file in write mode and write the report data to it
-        with open(self.report_file_path, 'w') as report_file:
+        with open(self.report_file_path, 'a') as report_file:
             report_file.write(report_data)
 
+        # Clearing the list of unsaved reports
+        self.report_data.clear()
+
         return True
+
+    @staticmethod
+    def markdown_to_text(markdown_string: str) -> str:
+        """
+        Converts a Markdown formatted string to plain text.
+
+        This method takes a string formatted in Markdown, converts it to HTML,
+        and then extracts the plain text from the HTML.
+
+        Args:
+            markdown_string (str): The input string containing Markdown formatted text.
+
+        Returns:
+            str: The extracted plain text from the Markdown input.
+        """
+
+        # Convert Markdown to HTML
+        html = markdown.markdown(markdown_string)
+    
+        # Parsing HTML and extracting text
+        soup = bs4.BeautifulSoup(html, "html.parser")
+        text = soup.get_text()
+        
+        return text
