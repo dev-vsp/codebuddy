@@ -4,7 +4,7 @@ import pathlib
 import pathspec
 from typing import Dict, List
 
-from .config import EXTENTIONS, FILTER_FILES, FILTER_DIRS
+from .config import EXTENTIONS, ALL_CATEGORIES, FILTER_FILES, FILTER_DIRS
 
 
 class RepositoryTools:
@@ -25,29 +25,42 @@ class RepositoryTools:
         self.repository_dir = repository_dir.resolve()
 
         # Categorize the files in the repository
-        self.project_structure = self.categorize_files()
+        self.project_structure = self._categorize_files()
 
-    def get_files_data(self, category: str) -> list:
+    def get_files(self, categories: list = ALL_CATEGORIES) -> Dict[str, List[pathlib.Path]]:
         """
-        Reads and returns the content of files in the specified category.
+        Retrieves a dictionary of file paths categorized by the specified categories.
 
         Args:
-            category (str): The category of files to read ('code' or 'docs').
+            categories (list): A list of categories for which to retrieve files. Defaults to ALL_CATEGORIES.
 
         Returns:
-            Dict[pathlib.Path, str]: A dictionary where keys are file paths and values are the file contents.
+            Dict[str, List[pathlib.Path]]: Dictionary with file paths sorted by category.
         """
 
-        files_data = {}
+        result = {}
+        for category in categories:
+            result[category] = self.project_structure.get(category)
 
-        # Iterate over the files in the specified category
-        for f in self.project_structure.get(category):
-            with open(f, 'r') as file_data:
-                files_data[f] = file_data.read()
+        return result
 
-        return files_data
+    def get_file_data(self, file_path: pathlib.Path) -> str:
+        """
+        Reads and returns the content of the specified file.
 
-    def read_gitignore(self) -> pathspec.PathSpec:
+        Args:
+            file_path (Path): The path to the file whose content is to be read.
+
+        Returns:
+            str: The content of the file as a string.
+        """
+
+        with open(file_path, 'r') as f:
+            file_data = f.read()
+
+        return file_data
+
+    def _read_gitignore(self) -> pathspec.PathSpec:
         """
         Reads the .gitignore file and returns a PathSpec object representing the patterns.
 
@@ -72,7 +85,7 @@ class RepositoryTools:
         # Create a PathSpec object from the collected patterns
         return pathspec.PathSpec.from_lines("gitwildmatch", patterns)
 
-    def categorize_files(self) -> Dict[str, List[pathlib.Path]]:
+    def _categorize_files(self) -> Dict[str, List[pathlib.Path]]:
         """
         Categorizes files in the repository into 'code' and 'docs' categories based on their extensions,
         while respecting the .gitignore file and a list of filtered files and directories.
@@ -83,13 +96,12 @@ class RepositoryTools:
         """
 
         # Read the .gitignore patterns
-        spec = self.read_gitignore()
+        spec = self._read_gitignore()
 
         # Initialize the result dictionary with 'code' and 'docs' categories
-        result = {
-            "code": [],
-            "docs": [],
-        }
+        result = {}
+        for category in ALL_CATEGORIES:
+            result[category] = []
 
         # Recursively iterate over all files and directories in the repository
         for path in self.repository_dir.rglob("*"):
@@ -114,10 +126,9 @@ class RepositoryTools:
                 ext = path.suffix.lower()
 
                 # Categorize the file based on its extension
-                if ext in EXTENTIONS.get("code"):
-                    result["code"].append(path)
-                elif ext in EXTENTIONS.get("docs"):
-                    result["docs"].append(path)
+                for category in ALL_CATEGORIES:
+                    if ext in EXTENTIONS.get(category):
+                        result[category].append(path)
 
         return result
 

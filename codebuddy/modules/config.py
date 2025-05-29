@@ -20,7 +20,7 @@ Create a report about the source code of the project.
 Write 10 bugs, failed solutions or other problems as short as possible.
 Do not write code samples, try to fit into 400 tokens.
 
-{code}
+{data}
 """
 
 DOCS_REVIEW_PROMPT = """
@@ -28,7 +28,7 @@ Create a project documentation report.
 Write 10 bugs, failed solutions or other problems as short as possible.
 Do not write examples, try to fit within 400 tokens.
 
-{doc_text}
+{data}
 """
 
 PROMPTS = {
@@ -52,6 +52,8 @@ EXTENTIONS = {
     "code": CODE_EXTENSIONS,
     "docs": DOCS_EXTENSIONS
 }
+
+ALL_CATEGORIES = EXTENTIONS.keys()
 
 # List of files that will not be analyzed
 FILTER_FILES = [

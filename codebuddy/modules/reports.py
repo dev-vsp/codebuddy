@@ -12,20 +12,24 @@ class ReportGenerator:
     """
     A class to generate, edit and save reports.
 
-    This class manages the creation of report files in the repository directory,
+    This class manages the creation of report files,
     allowing you to add records to a report and save it with a time stamped name.
     """
 
-    def __init__(self, repository_dir: pathlib.Path) -> None:
+    def __init__(self, repository_dir: pathlib.Path, reports_dir: pathlib.Path = None) -> None:
         """
         Initializes the ReportGenerator for storing reports.
 
         Args:
-            repository_dir (Path): Repository directory path, used for storing reports.
+            repository_dir (Path): Repository directory path, is used to determine where reports are stored or to name files.
+            reports_dir (Path): Report directory path, used for storing reports.
         """
 
-        # Convert the full path to the directory with reports
-        self.reports_dir = (repository_dir / REPORT_DIR_NAME).resolve()
+        if reports_dir:
+            self.reports_dir = reports_dir
+        else:
+            # Convert the full path to the directory with reports
+            self.reports_dir = (repository_dir / REPORT_DIR_NAME).resolve()
 
         # Check if the reports directory exists, and create it if it doesn't
         if not self.reports_dir.exists():
@@ -35,32 +39,42 @@ class ReportGenerator:
         current_datetime = datetime.datetime.now()
         # Format the current date and time as a string in the format YYYY-MM-DD_HH:MM:SS
         formatted_datetime = current_datetime.strftime("%Y-%m-%d_%H:%M:%S")
+
         # Create the full path for the report file using the formatted date and time
-        self.report_file_path = self.reports_dir / f"{formatted_datetime}.md"
+        if reports_dir:
+            report_file_name_prefix = repository_dir.name + "_"
+        else:
+            report_file_name_prefix = ""
+
+        self.report_file_path = self.reports_dir / f"{report_file_name_prefix}{formatted_datetime}.md"
 
         # Initialize an empty list to store report entries
         self.report_data = []
 
-    def add_report_entry(self, file_path: str, report_entry_data: str) -> bool:
+    def add_report_entry(self, file_path: str, report_entry_data: str, auto_save: bool = True) -> bool:
         """
         Adds an entry to the report data.
         
         Args:
             file_path (str): The path of the file being reported on.
             report_entry_data (str): The data to include in the report entry.
-        
+            auto_save (bool): If True, the method will immediately save the entry to a file.
+
         Returns:
             bool: Always returns True after adding the report entry.
         """
 
         # Create a formatted report entry string with a header
         # for the file path and the report entry data
-        report_entry = f"## File: {file_path}\n{report_entry_data}"
+        report_entry = f"\n## File: {file_path}\n{report_entry_data}\n"
 
         # Append the report entry to the list of report data
         self.report_data.append(
             report_entry
         )
+
+        if auto_save:
+            self.save_report_file()
 
         return True
 
