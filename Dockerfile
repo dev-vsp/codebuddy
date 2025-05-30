@@ -1,9 +1,9 @@
 
 FROM python:3.12
 
-WORKDIR /CodeBuddy
+WORKDIR /codebuddy
 
-COPY . /CodeBuddy
+COPY . /codebuddy
 
 RUN pip install --no-cache-dir -r requirements.txt
 

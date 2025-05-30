@@ -45,14 +45,20 @@ class RepositoryTools:
             Dict[str, List[pathlib.Path]]: Dictionary with file paths sorted by category.
         """
 
-        logger.debug(f"Getting files for categories: {categories}")
+        if categories == ALL_CATEGORIES:
+            # Return files of all categories
+            logger.debug(f"Specifies all file categories, returns the project structure...")
+            return self.project_structure
+        else:
+            # Retrieving files of specific categories
+            logger.debug(f"Getting files for categories: {categories}")
 
-        result = {}
-        for category in categories:
-            result[category] = self.project_structure.get(category)
-            logger.debug(f"Files for category '{category}': {result[category]}")
+            result = {}
+            for category in categories:
+                result[category] = self.project_structure.get(category)
+                logger.debug(f"Files for category '{category}': {result[category]}")
 
-        return result
+            return result
 
     def get_file_data(self, file_path: pathlib.Path) -> str:
         """
@@ -65,6 +71,7 @@ class RepositoryTools:
             str: The content of the file as a string.
         """
 
+        # Reading data from a file
         logger.debug(f"Reading file: {file_path}")
         with open(file_path, 'r') as f:
             file_data = f.read()
@@ -85,8 +92,8 @@ class RepositoryTools:
 
         # Check if the .gitignore file exists
         if gitignore_path.exists():
-            logger.debug(f"Found .gitignore file: {gitignore_path}")
             # Open and read the .gitignore file
+            logger.debug(f"Found .gitignore file: {gitignore_path}")
             with gitignore_path.open("r", encoding="utf-8") as f:
                 for line in f:
                     # Strip whitespace and ignore empty lines and comments
@@ -165,10 +172,12 @@ class RepositoryTools:
             git.Repo: A git.Repo object representing the cloned repository.
         """
 
+        # Convert to a string with the full path to the local directory
         local_dir = local_dir.resolve().as_posix()
 
+        # Cloning a repository
         logger.debug(f"Cloning repository from {repo_url} to {local_dir}")
         repo = git.Repo.clone_from(repo_url, f"{local_dir}")
-
         logger.debug(f"Cloned repository: {repo}")
+
         return repo

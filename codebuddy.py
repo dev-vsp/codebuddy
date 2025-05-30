@@ -2,7 +2,7 @@
 
 try:
 
-    from codebuddy import cli
+    from src import cli
 
     cli()
 

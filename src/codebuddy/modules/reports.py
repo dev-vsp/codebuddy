@@ -27,7 +27,7 @@ class ReportGenerator:
 
         Args:
             repository_dir (Path): Repository directory path, is used to determine where reports are stored or to name files.
-            reports_dir (Path): Report directory path, used for storing reports.
+            reports_dir (Path, optional): Report directory path, used for storing reports.
         """
 
         if reports_dir:
@@ -68,7 +68,7 @@ class ReportGenerator:
         Args:
             file_path (str): The path of the file being reported on.
             report_entry_data (str): The data to include in the report entry.
-            auto_save (bool): If True, the method will immediately save the entry to a file.
+            auto_save (bool, optional): If True, the method will immediately save the entry to a file.
 
         Returns:
             bool: Always returns True after adding the report entry.
@@ -94,24 +94,29 @@ class ReportGenerator:
         Saves the accumulated report data to a Markdown file.
         
         Returns:
-            bool: Always returns True after saving the report file.
+            bool: Always returns True if the reports exist, otherwise False.
         """
 
-        # Join all report entries into a single string
-        report_data = "\n\n".join(self.report_data)
-        logger.debug(f"Joining report data into a single string: {report_data}")
+        # Checking for reports
+        if self.report_data:
+            # Join all report entries into a single string
+            report_data = "\n\n".join(self.report_data)
+            logger.debug(f"Joining report data into a single string: {report_data}")
 
-        # Open the report file in write mode and write the report data to it
-        with open(self.report_file_path, 'a') as report_file:
-            report_file.write(report_data)
+            # Open the report file in write mode and write the report data to it
+            with open(self.report_file_path, 'a') as report_file:
+                report_file.write(report_data)
 
-        logger.debug(f"Report data written to file: {self.report_file_path}")
+            logger.debug(f"Report data written to file: {self.report_file_path}")
 
-        # Clearing the list of unsaved reports
-        self.report_data.clear()
-        logger.debug("Report data cleared after saving.")
+            # Clearing the list of unsaved reports
+            self.report_data.clear()
+            logger.debug("Report data cleared after saving")
 
-        return True
+            return True
+        else:
+            logger.debug("Report file has not been saved, report list is empty")
+            return False
 
     @staticmethod
     def markdown_to_text(markdown_string: str) -> str:

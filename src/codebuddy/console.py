@@ -3,8 +3,10 @@ import click
 import pathlib
 import logging
 
-from .modules import Assistant, RepositoryTools, ReportGenerator
-from .modules.types import APIURL, GitURL
+from .modules import assistant
+from .modules import reports
+from .modules import repository
+from .modules import types
 
 
 # Setting up the logger for this module
@@ -22,13 +24,13 @@ logger = logging.getLogger(__name__)
 @click.option(
     "--api",                                # Option to specify the API URL
     "api_url",                              # Name of the variable to store the API URL
-    type=APIURL(),                          # Custom type for API URLs
+    type=types.APIURL(),                          # Custom type for API URLs
     help="URL of the language model API."
 )
 @click.option(
     "--clone",                              # Option to clone a repository from a URL
     "repository_url",                       # Name of the variable to store the repository URL
-    type=GitURL(),                          # Custom type for Git URLs
+    type=types.GitURL(),                          # Custom type for Git URLs
     help="Cloning a remote repository before analyzing it."
 )
 @click.option(
@@ -73,26 +75,36 @@ def cli(
 
         # Cloning the repository from the provided URL if specified
         if repository_url:
-            logger.info(f"Cloning repository from {repository_url} to {repository_dir}")
-            RepositoryTools.clone_from(repository_url, repository_dir)
+            try:
+                # Check if the repository is available
+                if (repository_dir / ".git").exists():
+                    logger.warning(f"Repository cloning failed ('{repository_dir.name}' already exists)")
+                else:
+                    logger.info(f"Cloning repository from {repository_url} to {repository_dir}")
+                    repository.RepositoryTools.clone_from(repository_url, repository_dir)
+            except Exception as e:
+                logger.error(f"Repository cloning error: {e}")
+                return
 
         # Initializing the assistant with the API URL
-        assistant = Assistant(api_url)
+        ai = assistant.Assistant(api_url)
 
         # Initializing tools for handling the repository
-        repo_tools = RepositoryTools(repository_dir)
+        repo_tools = repository.RepositoryTools(repository_dir)
 
         # Initializing the report generator with the repository and reports directories
-        reports = ReportGenerator(repository_dir, reports_dir)
+        report_generator = reports.ReportGenerator(repository_dir, reports_dir)
 
         # Logging the path of the report file
-        logger.info(f"Report file: {reports.report_file_path}")
+        logger.info(f"Report file: {report_generator.report_file_path}")
 
         # Logging the start of the analysis
         logger.info(f"Running analysis for repository '{repository_dir.name}'...")
 
         # Getting all files categorized by their types from the repository
         files = repo_tools.get_files()
+
+        errors_counter = 0
         for category in files.keys():
             for file_path in files.get(category):
                 try:
@@ -103,24 +115,29 @@ def cli(
                     logger.info(f"[{category}] Analyzing file '{file_path}'...")
 
                     # Getting the review of the current file from the assistant
-                    file_review = assistant.review(category, file_data)
+                    file_review = ai.review(category, file_data)
 
                     # Adding the review to the reports
-                    reports.add_report_entry(file_path, file_review)
+                    report_generator.add_report_entry(file_path, file_review)
 
                     # Printing the review to the terminal if the print flag is set
                     if print_reports:
-                        print(f"\n{reports.markdown_to_text(file_review)}\n")
+                        print(f"\nFile: {file_path}")
+                        print(f"{reports.ReportGenerator.markdown_to_text(file_review)}\n")
 
                 except Exception as e:
+                    errors_counter += 1
                     logger.error(f"Error analyzing file '{file_path}': {e}")
 
         # Saving the final report file
-        reports.save_report_file()
+        report_generator.save_report_file()
 
-        # Logging the successful completion of the analysis
-        logger.info("Analysis successfully completed!")
+        # Checking for errors in the analysis process
+        if errors_counter:
+            logger.warning(f"Analysis is complete, but there were {errors_counter} error(s)")
+        else:
+            # Logging the successful completion of the analysis
+            logger.info("Analysis successfully completed!")
 
     except Exception as e:
         logger.error(f"An error occurred: {e}")
-        click.echo(f"An error occurred: {e}", err=True)

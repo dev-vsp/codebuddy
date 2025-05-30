@@ -2,12 +2,27 @@
 from setuptools import setup, find_packages
 
 
+# Attempt to read the README.md file for the long description of the package
 try:
     with open("README.md", "r", encoding="utf-8") as readme_file:
         long_description = readme_file.read()
-except:
+except Exception as e:
+    # If there is an error reading the README.md file,
+    # print the error and set long_description to an empty string
+    print(f"\nError reading file 'README.md': {e}")
     long_description = ''
 
+# Attempt to read the LICENSE file to include it in the package metadata
+try:
+    with open("LICENSE", "r", encoding="utf-8") as license_file:
+        license_file_text = license_file.read()
+except Exception as e:
+    # If there is an error reading the LICENSE file,
+    # print the error and set license_file_text to 'MIT'
+    print(f"\nError reading file 'LICENSE': {e}")
+    license_file_text = 'MIT'
+
+# Setup function to define package metadata and configurations
 setup(
     name="codebuddy",
     version="0.1.0",
@@ -31,11 +46,11 @@ setup(
 
     entry_points={
         'console_scripts': [
-            "codebuddy=codebuddy.console:cli"
+            "codebuddy=src:cli"
         ]
     },
 
-    license='MIT',
+    license=license_file_text,
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",

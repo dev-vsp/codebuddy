@@ -2,11 +2,11 @@
 import logging
 
 from .console import cli
-from .modules import LOGGER_CONFIG
+from .modules import config
 
 
 __all__ = [
-    'cli',
+    'cli'
 ]
 
 # Configuring logging
@@ -14,14 +14,14 @@ handlers = [
     logging.StreamHandler()
 ]
 
-log_file = LOGGER_CONFIG.get("log_file")
+log_file = config.LOGGER.get("log_file")
 if log_file:
     handlers.append(
         logging.FileHandler(log_file)
     )
 
 logging.basicConfig(
-    level=LOGGER_CONFIG.get("level"),
-    format=LOGGER_CONFIG.get("format"),
+    level=config.LOGGER.get("level"),
+    format=config.LOGGER.get("format"),
     handlers=handlers
 )
