@@ -2,16 +2,18 @@
 from setuptools import setup, find_packages
 
 
-with open("README.md", "r", encoding="utf-8") as readme_file:
-    long_description = readme_file.read()
-
+try:
+    with open("README.md", "r", encoding="utf-8") as readme_file:
+        long_description = readme_file.read()
+except:
+    long_description = ''
 
 setup(
     name="codebuddy",
     version="0.1.0",
     author="Vadim Sergeev",
     author_email="dev-vsp@outlook.com",
-    description="Script for git repository analysis and reporting",
+    description="Script for analyzing git repositories using a language model",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/dev-vsp/CodeBuddy",
@@ -26,9 +28,21 @@ setup(
         "markdown==3.8",
         "beautifulsoup4==4.13.4",
     ],
+
     entry_points={
         'console_scripts': [
-            "codebuddy=codebuddy.__main__:app"
+            "codebuddy=codebuddy.console:cli"
         ]
-    }
+    },
+
+    license='MIT',
+    classifiers=[
+        "Development Status :: 2 - Pre-Alpha",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.12",
+        "Operating System :: OS Independent",
+    ],
+
+    keywords='git analysis language-model code-review',
 )
