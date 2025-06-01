@@ -52,9 +52,16 @@ class LMAPI:
         logger.debug(f"Received response with status code: {response.status_code}")
         logger.debug(f"Response text: '{response.text}'")
 
-        # Parse the JSON response
-        response_text = response_handler(response)
-        logger.debug(f"Extracted response text: '{response_text}'")
+        if response.status_code == 200:
+            # Parse the JSON response
+            response_text = response_handler(response)
+            logger.debug(f"Extracted response text: '{response_text}'")
 
-        # Return the extracted content as a string
-        return response_text
+            # Return the extracted content as a string
+            return response_text
+        else:
+            # Error logging
+            logger.error(f"Request failed with status code: {response.status_code}")
+
+            # Return empty string
+            return ""

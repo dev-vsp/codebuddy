@@ -61,12 +61,12 @@ class ReportGenerator:
         self.report_data = []
         logger.debug("Report data initialized as an empty list.")
 
-    def add_report_entry(self, file_path: str, report_entry_data: str, auto_save: bool = True) -> bool:
+    def add_report_entry(self, file_path: pathlib.Path, report_entry_data: str, auto_save: bool = True) -> bool:
         """
         Adds an entry to the report data.
         
         Args:
-            file_path (str): The path of the file being reported on.
+            file_path (Path): The path of the file being reported on.
             report_entry_data (str): The data to include in the report entry.
             auto_save (bool, optional): If True, the method will immediately save the entry to a file.
 
@@ -76,7 +76,7 @@ class ReportGenerator:
 
         # Create a formatted report entry string with a header
         # for the file path and the report entry data
-        report_entry = f"\n## File: {file_path}\n{report_entry_data}\n"
+        report_entry = f"\n## File: {file_path.as_posix()}\n{report_entry_data}\n"
         logger.debug(f"Adding report entry: {report_entry}")
 
         # Append the report entry to the list of report data
@@ -116,6 +116,36 @@ class ReportGenerator:
             return True
         else:
             logger.debug("Report file has not been saved, report list is empty")
+            return False
+        
+    def delete_report_file(self) -> bool:
+        """
+        Deletes the report file if it exists.
+
+        Returns:
+            bool: True if the file was successfully deleted, otherwise False.
+        """
+
+        if self.report_file_path.exists():
+            self.report_file_path.unlink()
+
+            return True
+        else:
+            return False
+        
+    def delete_reports_dir(self) -> bool:
+        """
+        Deletes the reports dir if it exists.
+
+        Returns:
+            bool: True if the dir was successfully deleted, otherwise False.
+        """
+
+        if self.reports_dir.exists():
+            self.reports_dir.rmdir()
+
+            return True
+        else:
             return False
 
     @staticmethod
