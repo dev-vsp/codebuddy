@@ -25,7 +25,7 @@ except Exception as e:
 # Setup function to define package metadata and configurations
 setup(
     name="codebuddy",
-    version="0.1.0",
+    version="0.1.1",
     author="Vadim Sergeev",
     author_email="dev-vsp@outlook.com",
     description="Script for analyzing git repositories using a language model",
